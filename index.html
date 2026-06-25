@@ -1,198 +1,241 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wallpaper Hub - Collection Navigation</title>
+<title>美化树形结构</title>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Segoe UI", Arial, sans-serif;
+:root{
+  --primary:#4f8cff;
+  --line:#d6dbe4;
+  --bg:#f6f8fc;
+  --card:#ffffff;
+  --text:#2c3e50;
 }
 
-body {
-    background: #0f172a;
-    color: #fff;
-    min-height: 100vh;
+body{
+  margin:0;
+  padding:40px;
+  background:var(--bg);
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 }
 
-header {
-    text-align: center;
-    padding: 60px 20px;
-    background: linear-gradient(135deg, #2563eb, #7c3aed);
+h2{
+  margin-bottom:24px;
+  color:var(--text);
 }
 
-header h1 {
-    font-size: 3rem;
-    margin-bottom: 10px;
+/* 树 */
+.tree{
+  max-width:800px;
 }
 
-header p {
-    opacity: 0.9;
-    font-size: 1.1rem;
+.tree details{
+  position:relative;
+  margin-left:28px;
+  padding-left:14px;
 }
 
-.search-box {
-    max-width: 700px;
-    margin: 30px auto;
-    display: flex;
-    gap: 10px;
+/* 竖线 */
+.tree details::before{
+  content:"";
+  position:absolute;
+  left:-12px;
+  top:0;
+  bottom:0;
+  width:2px;
+  background:var(--line);
 }
 
-.search-box input {
-    flex: 1;
-    padding: 15px;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
+/* 横线 */
+.tree details::after{
+  content:"";
+  position:absolute;
+  left:-12px;
+  top:20px;
+  width:14px;
+  height:2px;
+  background:var(--line);
 }
 
-.search-box button {
-    padding: 15px 25px;
-    border: none;
-    border-radius: 12px;
-    background: #2563eb;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
+/* 根节点不显示 */
+.tree > details::before,
+.tree > details::after{
+  display:none;
 }
 
-.container {
-    width: 90%;
-    max-width: 1200px;
-    margin: auto;
-    padding-bottom: 60px;
+/* 隐藏默认箭头 */
+summary::-webkit-details-marker{
+  display:none;
 }
 
-.section-title {
-    margin: 40px 0 20px;
-    font-size: 1.8rem;
-    border-left: 5px solid #3b82f6;
-    padding-left: 12px;
+summary{
+  list-style:none;
+  cursor:pointer;
+
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+  background:var(--card);
+  border:1px solid #e7ebf3;
+  border-radius:12px;
+
+  padding:10px 14px;
+  margin:6px 0;
+
+  color:var(--text);
+  font-weight:600;
+
+  transition:.25s;
+  box-shadow:
+    0 2px 8px rgba(0,0,0,.04);
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(250px,1fr));
-    gap: 20px;
+summary:hover{
+  transform:translateX(3px);
+  border-color:var(--primary);
+  box-shadow:
+    0 6px 16px rgba(79,140,255,.15);
 }
 
-.card {
-    background: #1e293b;
-    padding: 25px;
-    border-radius: 16px;
-    transition: 0.3s;
+/* 展开箭头 */
+summary::before{
+  content:"▶";
+  font-size:12px;
+  color:var(--primary);
+  transition:.25s;
 }
 
-.card:hover {
-    transform: translateY(-5px);
-    background: #334155;
+details[open] > summary::before{
+  transform:rotate(90deg);
 }
 
-.card h3 {
-    margin-bottom: 10px;
+/* 文件夹图标 */
+summary::after{
+  content:"📁";
 }
 
-.card p {
-    color: #cbd5e1;
-    margin-bottom: 15px;
+details[open] > summary::after{
+  content:"📂";
 }
 
-.card a {
-    text-decoration: none;
-    color: #60a5fa;
-    font-weight: bold;
+/* 内容区 */
+.tree p{
+  margin:8px 0 14px 12px;
+
+  background:white;
+  border-left:4px solid var(--primary);
+
+  padding:12px 16px;
+  border-radius:10px;
+
+  color:#666;
+  line-height:1.6;
+
+  box-shadow:
+    0 2px 6px rgba(0,0,0,.04);
 }
 
-footer {
-    text-align: center;
-    padding: 30px;
-    color: #94a3b8;
+/* 深色模式 */
+@media (prefers-color-scheme: dark){
+
+  :root{
+    --bg:#111827;
+    --card:#1f2937;
+    --text:#f3f4f6;
+    --line:#4b5563;
+  }
+
+  .tree p{
+    background:#1f2937;
+    color:#d1d5db;
+  }
+
+  summary{
+    border-color:#374151;
+  }
 }
 </style>
 </head>
+
 <body>
 
-<header>
-    <h1>Wallpaper Hub</h1>
-    <p>Your Ultimate Wallpaper Collection Navigation</p>
+<h2>🌳 项目目录树</h2>
 
-    <div class="search-box">
-        <input type="text" placeholder="Search wallpapers...">
-        <button>Search</button>
-    </div>
-</header>
+<div class="tree">
 
-<div class="container">
+  <details open>
+    <summary>根节点 1</summary>
 
-    <h2 class="section-title">🌄 Nature Wallpapers</h2>
-    <div class="grid">
-        <div class="card">
-            <h3>Wallhaven</h3>
-            <p>High-quality landscapes, mountains, forests and nature scenes.</p>
-            <a href="https://wallhaven.cc" target="_blank">Visit Site →</a>
-        </div>
+    <p>这是根节点 1 的内容。</p>
 
-        <div class="card">
-            <h3>Unsplash</h3>
-            <p>Free professional photography wallpapers and backgrounds.</p>
-            <a href="https://unsplash.com" target="_blank">Visit Site →</a>
-        </div>
-    </div>
+    <details open>
+      <summary>子节点 1-1</summary>
 
-    <h2 class="section-title">🎮 Gaming Wallpapers</h2>
-    <div class="grid">
-        <div class="card">
-            <h3>Alpha Coders</h3>
-            <p>Thousands of game wallpapers from popular titles.</p>
-            <a href="https://wall.alphacoders.com" target="_blank">Visit Site →</a>
-        </div>
+      <p>这是子节点 1-1 的内容。</p>
 
-        <div class="card">
-            <h3>Wallpaper Abyss</h3>
-            <p>Gaming, anime and desktop wallpaper collections.</p>
-            <a href="https://wall.alphacoders.com" target="_blank">Visit Site →</a>
-        </div>
-    </div>
+      <details>
+        <summary>孙子节点 1-1-1</summary>
+        <p>这是孙子节点 1-1-1 的内容。</p>
+      </details>
 
-    <h2 class="section-title">🎨 Anime Wallpapers</h2>
-    <div class="grid">
-        <div class="card">
-            <h3>Zerochan</h3>
-            <p>Anime character and illustration wallpapers.</p>
-            <a href="https://www.zerochan.net" target="_blank">Visit Site →</a>
-        </div>
+      <details>
+        <summary>孙子节点 1-1-2</summary>
+        <p>这是孙子节点 1-1-2 的内容。</p>
+      </details>
 
-        <div class="card">
-            <h3>Konachan</h3>
-            <p>Large anime wallpaper community and gallery.</p>
-            <a href="https://konachan.com" target="_blank">Visit Site →</a>
-        </div>
-    </div>
+    </details>
 
-    <h2 class="section-title">🚀 4K & Ultra HD</h2>
-    <div class="grid">
-        <div class="card">
-            <h3>4K Wallpapers</h3>
-            <p>Ultra HD wallpapers optimized for modern displays.</p>
-            <a href="https://4kwallpapers.com" target="_blank">Visit Site →</a>
-        </div>
+    <details>
+      <summary>子节点 1-2</summary>
 
-        <div class="card">
-            <h3>HDQWalls</h3>
-            <p>Curated collection of 4K, 5K and 8K wallpapers.</p>
-            <a href="https://hdqwalls.com" target="_blank">Visit Site →</a>
-        </div>
-    </div>
+      <p>这是子节点 1-2 的内容。</p>
+
+      <details>
+        <summary>孙子节点 1-2-1</summary>
+        <p>这是孙子节点 1-2-1 的内容。</p>
+      </details>
+    </details>
+
+  </details>
+
+  <details>
+    <summary>根节点 2</summary>
+
+    <p>这是根节点 2 的内容。</p>
+
+    <details>
+      <summary>子节点 2-1</summary>
+      <p>这是子节点 2-1 的内容。</p>
+    </details>
+
+    <details>
+      <summary>子节点 2-2</summary>
+
+      <p>这是子节点 2-2 的内容。</p>
+
+      <details>
+        <summary>孙子节点 2-2-1</summary>
+        <p>这是孙子节点 2-2-1 的内容。</p>
+      </details>
+
+      <details>
+        <summary>孙子节点 2-2-2</summary>
+        <p>这是孙子节点 2-2-2 的内容。</p>
+      </details>
+
+    </details>
+
+  </details>
 
 </div>
-
-<footer>
-    © 2026 Wallpaper Hub | Curated Wallpaper Collection Navigation
-</footer>
 
 </body>
 </html>
